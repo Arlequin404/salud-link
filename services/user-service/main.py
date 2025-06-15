@@ -11,6 +11,8 @@ import jwt
 import os
 from dotenv import load_dotenv
 from sqlalchemy import func
+from models import users
+
 
 load_dotenv()
 
@@ -178,3 +180,5 @@ async def paciente_area(payload: dict = Depends(only_paciente)):
 @app.get("/doctor-area")
 async def doctor_area(payload: dict = Depends(only_doctor)):
     return {"message": f"Bienvenido/a doctor {payload['sub']}"}
+
+print("🔍 DATABASE_URL:", DATABASE_URL)
