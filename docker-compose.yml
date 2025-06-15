@@ -1,0 +1,19 @@
+# docker-compose.ymlversion: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: saludlink-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: saludlink
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
