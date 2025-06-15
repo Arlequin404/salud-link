@@ -181,4 +181,4 @@ async def paciente_area(payload: dict = Depends(only_paciente)):
 async def doctor_area(payload: dict = Depends(only_doctor)):
     return {"message": f"Bienvenido/a doctor {payload['sub']}"}
 
-print("🔍 DATABASE_URL:", DATABASE_URL)
+

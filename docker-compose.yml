@@ -19,3 +19,12 @@ services:
       - "8081:8081"
     env_file:
       - ./services/user-service/.env
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: saludlink-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - user-service
