@@ -1,9 +1,0 @@
-fastapi
-uvicorn
-databases[postgresql]
-sqlalchemy
-passlib[bcrypt]
-pyjwt
-pydantic[email]
-psycopg2-binary
-python-dotenv

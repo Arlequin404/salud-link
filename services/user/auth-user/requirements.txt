@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+sqlalchemy
+databases[postgresql]
+asyncpg
+passlib[bcrypt]
+pydantic[email]
+aiokafka
+loguru
+PyJWT
+python-multipart
+psycopg2-binary
+bcrypt==3.2.2
+
+
