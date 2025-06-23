@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CreateUserForm = () => {
+const CreateUserForm = ({ onCreate }) => {
   const [formData, setFormData] = useState({
     cedula: "",
     name: "",
@@ -21,17 +21,35 @@ const CreateUserForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Detecta entorno: producción (docker frontend) o desarrollo local (vite)
+    const baseUrl = import.meta.env.PROD ? "" : "http://localhost:8081";
+
     try {
-      const res = await fetch("http://localhost:8081/create-user", {
+      const res = await fetch(`${baseUrl}/create-user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       if (res.ok) {
         alert("✅ Usuario creado");
-        setFormData({ ...formData, cedula: "", name: "", email: "", password: "", phone: "", birthdate: "", gender: "", city: "", address: "", role: "paciente" });
+        setFormData({
+          cedula: "",
+          name: "",
+          email: "",
+          password: "",
+          phone: "",
+          birthdate: "",
+          gender: "",
+          city: "",
+          address: "",
+          role: "paciente",
+        });
+        onCreate(); // Recarga tabla de usuarios
       } else {
-        alert("❌ Error al crear usuario");
+        const data = await res.json();
+        alert("❌ Error: " + (data.message || "al crear usuario"));
       }
     } catch (error) {
       alert("❌ Error de conexión");

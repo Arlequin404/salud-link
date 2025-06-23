@@ -7,16 +7,20 @@ const AdminDashboard = ({ userName, onLogout }) => {
   const [filterRole, setFilterRole] = useState("todos");
   const [editingUser, setEditingUser] = useState(null);
   const [reload, setReload] = useState(false);
-  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const reloadUsers = () => setReload((r) => !r);
 
   useEffect(() => {
-    fetch("http://localhost:3010/users")
+    const baseUrl = import.meta.env.PROD ? "" : "http://update-user:3000";
+    fetch(`${baseUrl}/users`)
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((err) => console.error("Error al cargar usuarios:", err));
   }, [reload]);
+
+  useEffect(() => {
+    document.body.classList.toggle("modal-open", !!editingUser);
+  }, [editingUser]);
 
   const filteredUsers =
     filterRole === "todos"

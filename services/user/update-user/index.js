@@ -127,5 +127,15 @@ app.post('/users', async (req, res) => {
   }
 });
 
+// ✅ ENDPOINT FALTANTE PARA LISTAR TODOS LOS USUARIOS
+app.get('/users', async (_, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM users');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al obtener usuarios', error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 update-user service on port ${PORT}`));

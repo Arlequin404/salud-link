@@ -1,6 +1,7 @@
 # services/user/create-user/app/main.py
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware  # ← IMPORTANTE
 from pydantic import BaseModel, EmailStr, constr
 from uuid import uuid4
 from datetime import date
@@ -19,6 +20,15 @@ app = FastAPI(
     title="Create User Microservice",
     description="Service for creating and validating users",
     version="1.0.0"
+)
+
+# --- Habilitar CORS ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cambia a ["http://localhost:8080"] si deseas restringir
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

@@ -1,4 +1,3 @@
-// src/EditUserForm.jsx
 import React, { useState, useEffect } from "react";
 
 const EditUserForm = ({ user, onClose, onUpdate }) => {
@@ -14,22 +13,28 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Usa localhost en desarrollo, o ruta relativa en producción
+    const baseUrl = import.meta.env.PROD ? "" : "http://localhost:3010";
+
     try {
-      const res = await fetch(`http://localhost:3010/users/${user.id}`, {
+      const res = await fetch(`${baseUrl}/users/${user.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
+
       if (res.ok) {
-        alert("Usuario actualizado correctamente");
-        onUpdate(); // Recargar lista
-        onClose();
+        alert("✅ Usuario actualizado correctamente");
+        onUpdate(); // Recargar usuarios
+        onClose();  // Cerrar modal
       } else {
-        alert("Error: " + data.message);
+        alert("❌ Error: " + data.message);
       }
     } catch (error) {
-      alert("Error: " + error.message);
+      alert("❌ Error: " + error.message);
     }
   };
 

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import EditUserForm from "./EditUserForm";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
 
   const fetchUsers = async () => {
     try {
@@ -9,12 +11,8 @@ const UserList = () => {
       const data = await res.json();
       setUsers(data);
     } catch (err) {
-      console.error("Error al obtener usuarios", err);
+      console.error("Error al obtener usuarios:", err);
     }
-  };
-
-  const handleUpdate = (userId) => {
-    alert(`🔄 Aquí puedes implementar la lógica para actualizar al usuario con ID: ${userId}`);
   };
 
   useEffect(() => {
@@ -23,15 +21,39 @@ const UserList = () => {
 
   return (
     <div>
-      <h3>👥 Lista de Usuarios</h3>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>
-            {user.name} - {user.cedula}
-            <button onClick={() => handleUpdate(user.id)}>Actualizar</button>
-          </li>
-        ))}
-      </ul>
+      <h3>📋 Usuarios registrados</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((u) => (
+            <tr key={u.id}>
+              <td>{u.cedula}</td>
+              <td>{u.name}</td>
+              <td>{u.email}</td>
+              <td>{u.role}</td>
+              <td>
+                <button onClick={() => setEditingUser(u)}>Editar</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {editingUser && (
+        <EditUserForm
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onUpdate={fetchUsers}
+        />
+      )}
     </div>
   );
 };
