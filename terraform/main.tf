@@ -2,54 +2,42 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_instance" "user_instance" {
-  ami                    = "ami-05c13eab67c5d8861"
-  instance_type          = "t2.micro"
-  key_name               = var.key_name
-  vpc_security_group_ids = [aws_security_group.sg.id]
-  user_data              = file("user-instance.sh")
-  tags = {
-    Name = "User Services Instance"
-  }
-}
 
-resource "aws_instance" "frontend_instance" {
-  ami                    = "ami-05c13eab67c5d8861"
-  instance_type          = "t2.micro"
-  key_name               = var.key_name
-  vpc_security_group_ids = [aws_security_group.sg.id]
-  user_data              = file("frontend-instance.sh")
-  tags = {
-    Name = "Frontend Instance"
-  }
-}
-
+# Infra Instance
 resource "aws_instance" "infra_instance" {
   ami                    = "ami-05c13eab67c5d8861"
   instance_type          = "t2.micro"
   key_name               = var.key_name
-  vpc_security_group_ids = [aws_security_group.sg.id]
-  user_data              = file("infra-instance.sh")
+  vpc_security_group_ids = ["sg-0c2fa0825e341aa46"] # ✅ grupo existente
+  user_data              = file("${path.module}/infra-instance.sh")
+
   tags = {
     Name = "Infra Instance"
   }
 }
 
-resource "aws_security_group" "sg" {
-  name        = "saludlink-sg-dev"
-  description = "Allow all traffic for development"
+# User Instance
+resource "aws_instance" "user_instance" {
+  ami                    = "ami-05c13eab67c5d8861"
+  instance_type          = "t2.micro"
+  key_name               = var.key_name
+  vpc_security_group_ids = ["sg-0c2fa0825e341aa46"] # ✅ grupo existente
+  user_data              = file("${path.module}/user-instance.sh")
 
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  tags = {
+    Name = "User Services Instance"
   }
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+# Frontend Instance
+resource "aws_instance" "frontend_instance" {
+  ami                    = "ami-05c13eab67c5d8861"
+  instance_type          = "t2.micro"
+  key_name               = var.key_name
+  vpc_security_group_ids = ["sg-0c2fa0825e341aa46"] # ✅ grupo existente
+  user_data              = file("${path.module}/frontend-instance.sh")
+
+  tags = {
+    Name = "Frontend Instance"
   }
 }

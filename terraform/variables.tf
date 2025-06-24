@@ -1,4 +1,4 @@
 variable "key_name" {
-  description = "EC2 key pair name"
+  description = "Nombre del par de llaves SSH"
   type        = string
 }

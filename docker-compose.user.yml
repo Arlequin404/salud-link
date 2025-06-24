@@ -1,36 +1,56 @@
 version: "3.9"
 services:
   create-user:
-    image: kev1226/create-user:latest
+    image: alex8991/create-user:latest
     ports:
       - "8001:8000"
     environment:
-      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
-      - KAFKA_BROKER=18.215.167.219:9092
+      DB_HOST: 18.215.167.219
+      DB_PORT: 5432
+      DB_NAME: users_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
   update-user:
-    image: kev1226/update-user:latest
+    image: alex8991/update-user:latest
     ports:
       - "8002:8000"
     environment:
-      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
-      - KAFKA_BROKER=18.215.167.219:9092
+      DB_HOST: 18.215.167.219
+      DB_PORT: 5432
+      DB_NAME: users_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
   delete-user:
-    image: kev1226/delete-user:latest
+    image: alex8991/delete-user:latest
     ports:
       - "8003:8000"
     environment:
-      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
-      - KAFKA_BROKER=18.215.167.219:9092
+      DB_HOST: 18.215.167.219
+      DB_PORT: 5432
+      DB_NAME: users_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
   get-user:
-    image: kev1226/get-user:latest
+    image: alex8991/get-user:latest
     ports:
       - "8004:8000"
     environment:
-      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
-      - KAFKA_BROKER=18.215.167.219:9092
+      DB_HOST: 18.215.167.219
+      DB_PORT: 5432
+      DB_NAME: users_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
   auth-user:
-    image: kev1226/auth-user:latest
+    image: alex8991/auth-user:latest
     ports:
       - "8005:8000"
     environment:
-      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
+      DB_HOST: 18.215.167.219
+      DB_PORT: 5432
+      DB_NAME: users_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
