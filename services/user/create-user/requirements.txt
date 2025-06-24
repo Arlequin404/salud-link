@@ -1,15 +1,6 @@
 fastapi
-uvicorn
-databases[postgresql]
+uvicorn[standard]
 sqlalchemy
-passlib[bcrypt]
-pydantic[email]
 psycopg2-binary
 python-dotenv
-aiokafka
-pytest-asyncio
-httpx
-asgi-lifespan
-aiokafka
-loguru
-bcrypt==3.2.2
+email-validator
