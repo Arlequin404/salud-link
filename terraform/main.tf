@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "user_instance" {
-  ami                    = "ami-0c55b159cbfafe1f0"
+  ami                    = "ami-05c13eab67c5d8861"
   instance_type          = "t2.micro"
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.sg.id]
@@ -14,7 +14,7 @@ resource "aws_instance" "user_instance" {
 }
 
 resource "aws_instance" "frontend_instance" {
-  ami                    = "ami-0c55b159cbfafe1f0"
+  ami                    = "ami-05c13eab67c5d8861"
   instance_type          = "t2.micro"
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.sg.id]
@@ -25,7 +25,7 @@ resource "aws_instance" "frontend_instance" {
 }
 
 resource "aws_instance" "infra_instance" {
-  ami                    = "ami-0c55b159cbfafe1f0"
+  ami                    = "ami-05c13eab67c5d8861"
   instance_type          = "t2.micro"
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.sg.id]
@@ -36,7 +36,7 @@ resource "aws_instance" "infra_instance" {
 }
 
 resource "aws_security_group" "sg" {
-  name        = "saludlink-sg"
+  name        = "saludlink-sg-dev"
   description = "Allow all traffic for development"
 
   ingress {

@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  create-user:
+    image: kev1226/create-user:latest
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
+      - KAFKA_BROKER=18.215.167.219:9092
+  update-user:
+    image: kev1226/update-user:latest
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
+      - KAFKA_BROKER=18.215.167.219:9092
+  delete-user:
+    image: kev1226/delete-user:latest
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
+      - KAFKA_BROKER=18.215.167.219:9092
+  get-user:
+    image: kev1226/get-user:latest
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
+      - KAFKA_BROKER=18.215.167.219:9092
+  auth-user:
+    image: kev1226/auth-user:latest
+    ports:
+      - "8005:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@18.215.167.219:5432/saludlink
