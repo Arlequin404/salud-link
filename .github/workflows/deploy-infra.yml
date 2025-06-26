@@ -1,0 +1,36 @@
+name: Deploy Infra to QA
+
+on:
+  push:
+    paths:
+      - 'docker-compose.infra.yml'
+    branches:
+      - qa
+
+jobs:
+  deploy-infra:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Copy docker-compose to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST_QA_INFRA }}
+          username: ec2-user
+          key: ${{ secrets.SSH_KEY }}
+          source: "docker-compose.infra.yml"
+          target: "/home/ec2-user/salud-link"
+
+      - name: Run docker-compose on EC2 (INFRA)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_QA_INFRA }}
+          username: ec2-user
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/ec2-user/salud-link
+            docker compose -f docker-compose.infra.yml pull
+            docker compose -f docker-compose.infra.yml up -d --remove-orphans
