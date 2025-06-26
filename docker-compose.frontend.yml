@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  frontend:
+    image: alex8991/frontend:latest
+    ports:
+      - "80:80"

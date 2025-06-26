@@ -1,162 +1,51 @@
-version: "3.8"
+version: '3.8'
 
 services:
+
   create-user:
-    build:
-      context: ./services/user/create-user
+    build: ./services/user/create-user
     container_name: create-user
     ports:
-      - "8081:8081"
+      - "8001:8000"
     env_file:
       - ./services/user/create-user/.env
-    depends_on:
-      - create-user-db
-      - kafka
-    volumes:
-      - ./services/user/create-user:/app
-    networks:
-      - salud-net
-
-  create-user-db:
-    image: postgres:15
-    container_name: create-user-db
-    environment:
-      POSTGRES_DB: create_user_db
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-    ports:
-      - "5434:5432"
-    volumes:
-      - create_user_pgdata:/var/lib/postgresql/data
-    networks:
-      - salud-net
-
-  auth-user:
-    build:
-      context: ./services/user/auth-user
-    container_name: auth-user
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./services/user/auth-user:/app
-    env_file:
-      - ./services/user/auth-user/.env
-    depends_on:
-      - kafka
-      - auth-user-db
-    networks:
-      - salud-net
-
-  auth-user-db:
-    image: postgres:15
-    container_name: auth-user-db
-    environment:
-      POSTGRES_DB: auth_user_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5433:5432"
-    volumes:
-      - auth_user_pgdata:/var/lib/postgresql/data
-    networks:
-      - salud-net
-
-  zookeeper:
-    image: bitnami/zookeeper:3.8
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ALLOW_ANONYMOUS_LOGIN: yes
-    networks:
-      - salud-net
-
-  kafka:
-    image: bitnami/kafka:3.5.1
-    container_name: kafka
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_CFG_BROKER_ID: 1
-      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      ALLOW_PLAINTEXT_LISTENER: yes
-    depends_on:
-      - zookeeper
-    networks:
-      - salud-net
-
-
-  frontend:
-    build:
-      context: ./frontend
-    container_name: frontend
-    ports:
-      - "8080:80"
-    environment:
-      - VITE_API_URL=http://auth-user:3000
-    networks:
-      - salud-net
-
 
   update-user:
-    build:
-      context: ./services/user/update-user
+    build: ./services/user/update-user
     container_name: update-user
     ports:
-      - "3010:3000"
-    depends_on:
-      - update-user-db
-      - kafka
-    #volumes:
-    #  - ./services/user/update-user:/app
-    networks:
-      - salud-net
+      - "8002:8000"
+    env_file:
+      - ./services/user/update-user/.env
 
-  update-user-db:
-    image: postgres:15
-    container_name: update-user-db
-    environment:
-      POSTGRES_DB: update_user_db
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
+  delete-user:
+    build: ./services/user/delete-user
+    container_name: delete-user
     ports:
-      - "5435:5432"
+      - "8003:8000"
+    env_file:
+      - ./services/user/delete-user/.env
+
+  get-user:
+    build: ./services/user/get-user
+    container_name: get-user
+    ports:
+      - "8004:8000"
+    env_file:
+      - ./services/user/get-user/.env
+
+  auth-user:
+    build: ./services/user/auth-user
+    container_name: auth-user
+    ports:
+      - "8005:8000"
+    env_file:
+      - ./services/user/auth-user/.env
+
+  frontend:
+    image: nginx:alpine
+    container_name: frontend
+    ports:
+      - "3000:80"
     volumes:
-      - update_user_pgdata:/var/lib/postgresql/data
-    networks:
-      - salud-net
-
-  update-user-sync:
-    build:
-      context: ./services/user/update-user
-    container_name: update-user-sync
-    command: ./wait-for-it.sh update-user-db:5432 -- node kafkaConsumer.js
-    depends_on:
-      - kafka
-      - update-user-db
-    networks:
-      - salud-net
-
-  update-user-consumer:
-    build:
-      context: ./services/user/update-user
-      dockerfile: Dockerfile.consumer
-    container_name: update-user-consumer
-    depends_on:
-      - kafka
-      - update-user-db
-    networks:
-      - salud-net
-
-
-volumes:
-  create_user_pgdata:
-  auth_user_pgdata:
-  update_user_pgdata:
-
-networks:
-  salud-net:
-    driver: bridge
+      - ./frontend:/usr/share/nginx/html:ro

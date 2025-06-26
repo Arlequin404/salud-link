@@ -1,16 +1,13 @@
-FROM node:20-alpine
+FROM python:3.10-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Copiar los archivos de dependencias e instalar
-COPY package*.json ./
-RUN npm install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el script y darle permisos
-COPY wait-for-it.sh .
-RUN chmod +x wait-for-it.sh
-
-# Copiar el resto de la app
 COPY . .
 
-# Esperar a que la base de datos esté lista y luego ejecutar el servicio
-CMD ["./wait-for-it.sh", "update-user-db:5432", "--", "node", "index.js"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

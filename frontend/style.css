@@ -1,0 +1,10 @@
+
+body { font-family: Arial; margin: 2em; background: #f8f9fa; }
+h1 { color: #333; }
+form, table, .tabs { margin-top: 1em; }
+input, select { display: block; margin: 0.5em 0; padding: 0.5em; width: 300px; }
+button { margin: 0.5em 0; padding: 0.5em 1em; }
+.tabcontent { display: none; }
+.tablink { padding: 0.5em 1em; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+th, td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
