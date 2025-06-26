@@ -1,4 +1,4 @@
-name: Deploy Frontend QA
+name: deploy-frontend-qa
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - qa
 
 jobs:
-  deploy-frontend-qa:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,20 +16,19 @@ jobs:
       - name: Copy frontend files to EC2 QA
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST_FRONTEND_QA }}
-          username: ubuntu
+          host: ${{ secrets.HOST_QA_FRONTEND }}
+          username: ec2-user
           key: ${{ secrets.SSH_KEY_FRONTEND_QA }}
           source: "./frontend/*"
-          target: "/home/ubuntu/salud-link/frontend"
+          target: "/home/ec2-user/frontend"
 
       - name: Restart frontend container on EC2 QA
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST_FRONTEND_QA }}
-          username: ubuntu
+          host: ${{ secrets.HOST_QA_FRONTEND }}
+          username: ec2-user
           key: ${{ secrets.SSH_KEY_FRONTEND_QA }}
           script: |
-            cd /home/ubuntu/salud-link/frontend
             docker rm -f frontend || true
             docker rmi alex8991/frontend:latest || true
             docker pull alex8991/frontend:latest
