@@ -1,36 +1,36 @@
-name: Deploy Frontend to QA
+name: Deploy Frontend QA
 
 on:
   push:
-    paths:
-      - 'docker-compose.frontend.yml'
     branches:
       - qa
 
 jobs:
-  deploy-frontend:
+  deploy-frontend-qa:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Copy docker-compose to EC2
+      - name: Copy frontend files to EC2 QA
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST_QA_FRONTEND }}
-          username: ec2-user
-          key: ${{ secrets.SSH_KEY }}
-          source: "docker-compose.frontend.yml"
-          target: "/home/ec2-user/salud-link"
+          host: ${{ secrets.HOST_FRONTEND_QA }}
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY_FRONTEND_QA }}
+          source: "./frontend/*"
+          target: "/home/ubuntu/salud-link/frontend"
 
-      - name: Run docker-compose on EC2 (FRONTEND)
+      - name: Restart frontend container on EC2 QA
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST_QA_FRONTEND }}
-          username: ec2-user
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.HOST_FRONTEND_QA }}
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY_FRONTEND_QA }}
           script: |
-            cd /home/ec2-user/salud-link
-            docker compose -f docker-compose.frontend.yml pull
-            docker compose -f docker-compose.frontend.yml up -d --remove-orphans
+            cd /home/ubuntu/salud-link/frontend
+            docker rm -f frontend || true
+            docker rmi alex8991/frontend:latest || true
+            docker pull alex8991/frontend:latest
+            docker run -d --name frontend -p 80:80 alex8991/frontend:latest
