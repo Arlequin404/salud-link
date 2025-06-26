@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 id="Bienvebido"></h1>
+    <h1 id="welcome"></h1>
     <button onclick="logout()">Cerrar sesion</button>
 
     <div class="tabs">
@@ -24,7 +24,7 @@
         <table id="userTable">
             <thead>
                 <tr>
-                    <th>Cédula</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th>
+                    <th>Cedula</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -35,9 +35,9 @@
             <form id="editUserForm">
                 <input type="hidden" id="edit-id" />
                 <input type="text" id="edit-name" placeholder="Nombre" required /><br />
-                <input type="text" id="edit-cedula" placeholder="Cédula" required /><br />
+                <input type="text" id="edit-cedula" placeholder="Cedula" required /><br />
                 <input type="email" id="edit-email" placeholder="Correo" required /><br />
-                <input type="text" id="edit-phone" placeholder="Teléfono" /><br />
+                <input type="text" id="edit-phone" placeholder="Telefono" /><br />
                 <input type="date" id="edit-birthdate" placeholder="Fecha de nacimiento" /><br />
                 <select id="edit-gender" required>
                     <option value="">Selecciona género</option>
@@ -45,7 +45,7 @@
                     <option value="F">F</option>
                 </select><br />
                 <input type="text" id="edit-city" placeholder="Ciudad" /><br />
-                <input type="text" id="edit-address" placeholder="Dirección" /><br />
+                <input type="text" id="edit-address" placeholder="Direccion" /><br />
                 <select id="edit-role" required>
                     <option value="paciente">Paciente</option>
                     <option value="doctor">Doctor</option>
@@ -61,10 +61,10 @@
         <h3>Crear Usuario</h3>
         <form id="createForm">
             <input type="text" id="name" placeholder="Nombre" required />
-            <input type="text" id="cedula" placeholder="Cédula" required />
+            <input type="text" id="cedula" placeholder="Cedula" required />
             <input type="email" id="new_email" placeholder="Correo" required />
             <input type="password" id="new_password" placeholder="Contraseña" required />
-            <input type="text" id="phone" placeholder="Teléfono" />
+            <input type="text" id="phone" placeholder="Telefono" />
             <input type="date" id="birthdate" placeholder="Fecha de nacimiento" />
             <select id="gender" required>
                 <option value="">Selecciona género</option>
@@ -72,7 +72,7 @@
                 <option value="F">F</option>
             </select>
             <input type="text" id="city" placeholder="Ciudad" />
-            <input type="text" id="address" placeholder="Dirección" />
+            <input type="text" id="address" placeholder="Direccion" />
             <select id="role">
                 <option value="paciente">Paciente</option>
                 <option value="doctor">Doctor</option>
