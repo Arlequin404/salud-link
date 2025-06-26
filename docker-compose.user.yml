@@ -1,56 +1,68 @@
-version: "3.9"
+
+
 services:
+
   create-user:
     image: alex8991/create-user:latest
+    container_name: create-user
     ports:
       - "8001:8000"
     environment:
-      DB_HOST: 18.215.167.219
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      POSTGRES_HOST: 172.31.90.151
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: users_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      JWT_SECRET: supersecretkey
 
   update-user:
     image: alex8991/update-user:latest
+    container_name: update-user
     ports:
       - "8002:8000"
     environment:
-      DB_HOST: 18.215.167.219
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      POSTGRES_HOST: 172.31.90.151
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: users_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      JWT_SECRET: supersecretkey
 
   delete-user:
     image: alex8991/delete-user:latest
+    container_name: delete-user
     ports:
       - "8003:8000"
     environment:
-      DB_HOST: 18.215.167.219
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      POSTGRES_HOST: 172.31.90.151
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: users_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      JWT_SECRET: supersecretkey
 
   get-user:
     image: alex8991/get-user:latest
+    container_name: get-user
     ports:
       - "8004:8000"
     environment:
-      DB_HOST: 18.215.167.219
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      POSTGRES_HOST: 172.31.90.151
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: users_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      JWT_SECRET: supersecretkey
 
   auth-user:
     image: alex8991/auth-user:latest
+    container_name: auth-user
     ports:
       - "8005:8000"
     environment:
-      DB_HOST: 18.215.167.219
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      POSTGRES_HOST: 172.31.90.151
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: users_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      JWT_SECRET: supersecretkey

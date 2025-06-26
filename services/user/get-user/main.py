@@ -11,9 +11,13 @@ import os
 import jwt
 from typing import List, Optional
 from datetime import date
+from dotenv import load_dotenv
+
+# ✅ Cargar variables del archivo .env
+load_dotenv()
 
 # Configuración base
-DATABASE_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
 JWT_SECRET = os.getenv("JWT_SECRET", "supersecretkey")
 
 engine = create_engine(DATABASE_URL)
@@ -41,7 +45,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -8,8 +8,12 @@ from sqlalchemy.orm import sessionmaker
 import uuid
 import os
 import time
+from dotenv import load_dotenv
 
-DATABASE_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+# ✅ Cargar variables desde el archivo .env
+load_dotenv()
+
+DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
 
 # Retry database connection
 MAX_RETRIES = 10
@@ -48,7 +52,7 @@ app = FastAPI()
 # ✅ Middleware CORS para frontend en localhost:3000
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

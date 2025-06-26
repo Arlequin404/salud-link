@@ -1,86 +1,46 @@
+version: '3.8'
+
 services:
-  db-users:
-    image: postgres:15
-    container_name: db-users
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: users_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - users_data:/var/lib/postgresql/data
 
   create-user:
     build: ./services/user/create-user
     container_name: create-user
-    depends_on:
-      - db-users
     ports:
       - "8001:8000"
-    environment:
-      DB_HOST: db-users
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+    env_file:
+      - ./services/user/create-user/.env
 
   update-user:
     build: ./services/user/update-user
     container_name: update-user
-    depends_on:
-      - db-users
     ports:
       - "8002:8000"
-    environment:
-      DB_HOST: db-users
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+    env_file:
+      - ./services/user/update-user/.env
 
   delete-user:
     build: ./services/user/delete-user
     container_name: delete-user
-    depends_on:
-      - db-users
     ports:
       - "8003:8000"
-    environment:
-      DB_HOST: db-users
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+    env_file:
+      - ./services/user/delete-user/.env
 
   get-user:
     build: ./services/user/get-user
     container_name: get-user
-    depends_on:
-      - db-users
     ports:
       - "8004:8000"
-    environment:
-      DB_HOST: db-users
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+    env_file:
+      - ./services/user/get-user/.env
 
   auth-user:
     build: ./services/user/auth-user
     container_name: auth-user
-    depends_on:
-      - db-users
     ports:
       - "8005:8000"
-    environment:
-      DB_HOST: db-users
-      DB_PORT: 5432
-      DB_NAME: users_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+    env_file:
+      - ./services/user/auth-user/.env
 
   frontend:
     image: nginx:alpine
@@ -89,6 +49,3 @@ services:
       - "3000:80"
     volumes:
       - ./frontend:/usr/share/nginx/html:ro
-
-volumes:
-  users_data:

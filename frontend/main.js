@@ -1,10 +1,13 @@
+const BACKEND_HOST = "13.216.69.108";
+
 document.addEventListener("DOMContentLoaded", () => {
     const path = window.location.pathname;
     if (path.includes("index.html") || path === "/") {
         if (localStorage.getItem("token")) window.location.href = "home.html";
+
         document.getElementById("loginForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-            const res = await fetch("http://localhost:8005/auth", {
+            const res = await fetch(`http://${BACKEND_HOST}:8005/auth`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -12,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     password: document.getElementById("password").value
                 })
             });
+
             if (res.ok) {
                 const data = await res.json();
                 const decoded = JSON.parse(atob(data.access_token.split('.')[1]));
@@ -23,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Credenciales incorrectas");
             }
         });
+
     } else if (path.includes("home.html")) {
         const token = localStorage.getItem("token");
         const role = localStorage.getItem("role");
@@ -32,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         loadUsers();
 
-        // Ajustes por rol
         if (role === "doctor") {
             document.getElementById("role").innerHTML = '<option value="paciente">Paciente</option>';
         } else if (role === "paciente") {
@@ -41,12 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("crear").style.display = "none";
         }
 
-        // Crear usuario
         const createForm = document.getElementById("createForm");
         if (createForm) {
             createForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                const res = await fetch("http://localhost:8001/users", {
+                const res = await fetch(`http://${BACKEND_HOST}:8001/users`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -71,13 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Editar usuario
         const editForm = document.getElementById("editUserForm");
         if (editForm) {
             editForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 const id = document.getElementById("edit-id").value;
-                const res = await fetch(`http://localhost:8002/users/${id}`, {
+                const res = await fetch(`http://${BACKEND_HOST}:8002/users/${id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -108,21 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function logout() {
-    localStorage.clear();
-    window.location.href = "index.html";
-}
-
-function openTab(tabId) {
-    document.querySelectorAll(".tabcontent").forEach(el => el.style.display = "none");
-    document.getElementById(tabId).style.display = "block";
-}
-
 async function loadUsers() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-    const res = await fetch("http://localhost:8004/users", {
-        headers: { "Authorization": "Bearer " + token, "x-role": role }
+    const res = await fetch(`http://${BACKEND_HOST}:8004/users`, {
+        headers: {
+            "Authorization": "Bearer " + token,
+            "x-role": role
+        }
     });
     const users = await res.json();
     window.allUsers = users;
@@ -143,6 +138,28 @@ function renderUserTable(users) {
     }
 }
 
+async function deleteUser(id) {
+    const token = localStorage.getItem("token");
+    await fetch(`http://${BACKEND_HOST}:8003/users/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "x-role": localStorage.getItem("role")
+        }
+    });
+    loadUsers();
+}
+
+function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+}
+
+function openTab(tabId) {
+    document.querySelectorAll(".tabcontent").forEach(el => el.style.display = "none");
+    document.getElementById(tabId).style.display = "block";
+}
+
 function filterUsers() {
     const cedula = document.getElementById("searchCedula").value.toLowerCase();
     const role = document.getElementById("filterRole").value;
@@ -151,16 +168,6 @@ function filterUsers() {
         (!role || u.role === role)
     );
     renderUserTable(filtered);
-}
-
-async function deleteUser(id) {
-    const token = localStorage.getItem("token");
-    if (!confirm("¿Eliminar usuario?")) return;
-    await fetch(`http://localhost:8003/users/${id}`, {
-        method: "DELETE",
-        headers: { "Authorization": "Bearer " + token, "x-role": localStorage.getItem("role") }
-    });
-    loadUsers();
 }
 
 function editUser(user) {
