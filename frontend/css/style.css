@@ -1,0 +1,17 @@
+
+/* Navbar */
+.navbar{background:#2c3e50;padding:10px;display:flex;gap:24px}
+.navbar a{color:#fff;text-decoration:none;font-weight:600}
+.navbar a:hover{color:#1abc9c}
+/* Buttons */
+button{background:#1abc9c;border:none;color:#fff;padding:8px 16px;margin:4px;border-radius:4px;font-weight:600;cursor:pointer}
+button:hover{background:#16a085}
+/* Tables */
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{border:1px solid #ddd;padding:10px}
+/* Generic */
+.form-box{background:#f8f9fa;padding:16px;max-width:600px;border-radius:6px}
+.tabs{margin:16px 0}
+.tabcontent{display:none}
+/* Modal */
+.hidden{display:none}

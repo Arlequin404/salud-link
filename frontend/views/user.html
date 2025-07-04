@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Usuarios | Salud-Link</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script type="module" src="../js/main.js"></script>
+</head>
+
+<body>
+    <!-- ---------- NAV ---------- -->
+    <nav class="navbar">
+        <a href="home.html">Inicio</a>
+        <a href="user.html">Usuarios</a>
+        <a href="doctor.html">Doctores</a>
+        <a href="#" id="logoutBtn" style="margin-left:auto">Cerrar sesión</a>
+    </nav>
+
+    <h1 id="welcome"></h1>
+
+    <!-- ---------- TABS ---------- -->
+    <div class="tabs">
+        <button onclick="openTab('actualizar')">Actualizar</button>
+        <button onclick="openTab('crear')">Crear</button>
+    </div>
+
+    <!-- ========== ACTUALIZAR ========== -->
+    <section id="actualizar" class="tabcontent">
+        <input id="searchCedula" placeholder="Buscar por cédula" oninput="filterUsers()" />
+        <select id="filterRole" onchange="filterUsers()">
+            <option value="">Todos</option>
+            <option>admin</option>
+            <option>doctor</option>
+            <option>paciente</option>
+        </select>
+
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Fecha nac.</th>
+                    <th>Género</th>
+                    <th>Ciudad</th>
+                    <th>Dirección</th>
+                    <th>Rol</th>
+                    <th>Contraseña</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán los usuarios -->
+            </tbody>
+        </table>
+
+        <form id="editUserForm" class="form-box hidden">
+            <input type="hidden" id="edit-id" />
+            <input id="edit-name" placeholder="Nombre" required />
+            <input id="edit-cedula" placeholder="Cédula" required />
+            <input id="edit-email" type="email" placeholder="Email" required />
+            <input id="edit-phone" placeholder="Teléfono" />
+            <input id="edit-birthdate" type="date" />
+            <select id="edit-gender">
+                <option value="">Género</option>
+                <option>M</option>
+                <option>F</option>
+            </select>
+            <input id="edit-city" placeholder="Ciudad" />
+            <input id="edit-address" placeholder="Dirección" />
+            <select id="edit-role">
+                <option>paciente</option>
+                <option>doctor</option>
+                <option>admin</option>
+            </select>
+            <input id="edit-password" type="text" placeholder="Contraseña" />  <!-- Cambié de 'password' a 'text' -->
+            <div class="actions">
+                <button type="submit">Guardar</button>
+                <button type="button" onclick="toggleEdit(false)">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- ========== CREAR ========== -->
+    <section id="crear" class="tabcontent">
+        <h3>Crear Usuario</h3>
+        <form id="createForm" class="form-box">
+            <input id="name" placeholder="Nombre" required />
+            <input id="cedula" placeholder="Cédula" required />
+            <input id="email" type="email" placeholder="Email" required />
+            <input id="password" type="password" placeholder="Contraseña" required />
+            <input id="phone" placeholder="Teléfono" />
+            <input id="birth" type="date" />
+            <select id="gender">
+                <option value="">Género</option>
+                <option>M</option>
+                <option>F</option>
+            </select>
+            <input id="city" placeholder="Ciudad" />
+            <input id="address" placeholder="Dirección" />
+            <select id="role">
+                <option>paciente</option>
+                <option>doctor</option>
+                <option>admin</option>
+            </select>
+            <button type="submit">Crear</button>
+        </form>
+    </section>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { requireAuth, logout } from "../js/main.js";
+        const session = requireAuth();
+        document.getElementById('welcome').textContent =
+            `Bienvenido ${session.email} (${session.role})`;
+
+        document.getElementById('logoutBtn')
+            .addEventListener('click', e => { e.preventDefault(); logout(); });
+    </script>
+
+    <script src="../js/user/index.js"></script>
+</body>
+
+</html>

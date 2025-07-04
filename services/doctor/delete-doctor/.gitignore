@@ -1,0 +1,18 @@
+# Python caches and environments
+__pycache__/
+*.py[cod]
+env/
+node_modules/
+venv/
+.Python
+
+# Editor temp files
+*.swp
+*.swo
+
+# Environment files
+.env
+
+# Database files
+*.sqlite3
+*.db

@@ -1,47 +1,177 @@
 version: '3.8'
 
 services:
+  # ─────────────── POSTGRES FOR USER ───────────────
+  postgres-user:
+    image: postgres:15
+    container_name: postgres-user
+    restart: always
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d user_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - user_pg_data:/var/lib/postgresql/data
+    networks: [salud-link]
 
+  # ─────────────── POSTGRES FOR DOCTOR ───────────────
+  postgres-doctor:
+    image: postgres:15
+    container_name: postgres-doctor
+    restart: always
+    environment:
+      POSTGRES_DB: doctor_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d doctor_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5433:5432"
+    volumes:
+      - doctor_pg_data:/var/lib/postgresql/data
+    networks: [salud-link]
+
+  # ─────────────── USER MS ───────────────
   create-user:
     build: ./services/user/create-user
+    env_file: ./services/user/create-user/.env
     container_name: create-user
     ports:
       - "8001:8000"
-    env_file:
-      - ./services/user/create-user/.env
-
-  update-user:
-    build: ./services/user/update-user
-    container_name: update-user
-    ports:
-      - "8002:8000"
-    env_file:
-      - ./services/user/update-user/.env
-
-  delete-user:
-    build: ./services/user/delete-user
-    container_name: delete-user
-    ports:
-      - "8003:8000"
-    env_file:
-      - ./services/user/delete-user/.env
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
 
   get-user:
     build: ./services/user/get-user
+    env_file: ./services/user/get-user/.env
     container_name: get-user
     ports:
       - "8004:8000"
-    env_file:
-      - ./services/user/get-user/.env
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
+
+  update-user:
+    build: ./services/user/update-user
+    env_file: ./services/user/update-user/.env
+    container_name: update-user
+    ports:
+      - "8002:8000"
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
+
+  delete-user:
+    build: ./services/user/delete-user
+    env_file: ./services/user/delete-user/.env
+    container_name: delete-user
+    ports:
+      - "8003:8000"
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
 
   auth-user:
     build: ./services/user/auth-user
+    env_file: ./services/user/auth-user/.env
     container_name: auth-user
     ports:
       - "8005:8000"
-    env_file:
-      - ./services/user/auth-user/.env
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
 
+  # ─────────────── DOCTOR MS ───────────────
+  create-doctor:
+    build: ./services/doctor/create-doctor
+    env_file: ./services/doctor/create-doctor/.env
+    container_name: create-doctor
+    environment:
+      POSTGRES_HOST: postgres-doctor
+      POSTGRES_DB: doctor_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      PORT: 8006
+    ports:
+      - "8006:8006"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  list-doctors:
+    build: ./services/doctor/list-doctors
+    env_file: ./services/doctor/list-doctors/.env
+    container_name: list-doctors
+    ports:
+      - "8007:8007"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  get-doctor:
+    build: ./services/doctor/get-doctor
+    env_file: ./services/doctor/get-doctor/.env
+    container_name: get-doctor
+    ports:
+      - "8008:8008"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  update-doctor:
+    build: ./services/doctor/update-doctor
+    env_file: ./services/doctor/update-doctor/.env
+    container_name: update-doctor
+    ports:
+      - "8009:8009"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  delete-doctor:
+    build: ./services/doctor/delete-doctor
+    env_file: ./services/doctor/delete-doctor/.env
+    container_name: delete-doctor
+    ports:
+      - "8010:8010"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  # ─────────────── SCHEDULE SERVICE ───────────────
+  schedule-service:
+    build: ./services/doctor/schedule-service
+    env_file: ./services/doctor/schedule-service/.env
+    container_name: schedule-service
+    ports:
+      - "8012:8012"
+    depends_on:
+      - postgres-doctor
+      - get-doctor
+    networks: [salud-link]
+
+  # ─────────────── FRONTEND ───────────────
   frontend:
     image: nginx:alpine
     container_name: frontend
@@ -49,3 +179,12 @@ services:
       - "3000:80"
     volumes:
       - ./frontend:/usr/share/nginx/html:ro
+    networks: [salud-link]
+
+volumes:
+  user_pg_data:
+  doctor_pg_data:
+
+networks:
+  salud-link:
+    driver: bridge
