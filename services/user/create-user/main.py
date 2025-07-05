@@ -54,6 +54,12 @@ class UsersDoctors(Base):
     cedula  = Column(String(20), unique=True, nullable=False)
     name    = Column(String(255), nullable=False)
 
+class UsersPatients(Base):
+    __tablename__ = "users_patients"
+    user_id = Column(UUID(as_uuid=True), primary_key=True)
+    cedula  = Column(String(20), unique=True, nullable=False)
+    name    = Column(String(255), nullable=False)
+
 Base.metadata.create_all(bind=engine, checkfirst=True)
 
 # ──────────────────────────────
@@ -92,13 +98,22 @@ class UserCreate(BaseModel):
         return datetime.date.fromisoformat(v).isoformat() if v else None
 
 def sync_doctor_data(user_id: str, cedula: str, name: str):
-    url = "http://create-doctor:8006/api/doctor"  # <--- puerto 8006
+    url = "http://create-doctor:8006/api/doctor"
     payload = {"user_id": user_id, "cedula": cedula, "name": name}
     try:
         resp = requests.post(url, json=payload, timeout=5)
         resp.raise_for_status()
     except Exception as e:
         print("⚠️  create-doctor unreachable:", e)
+
+def sync_patient_data(user_id: str, cedula: str, name: str):
+    url = "http://create-patient:8014/api/patient"
+    payload = {"user_id": user_id, "cedula": cedula, "name": name}
+    try:
+        resp = requests.post(url, json=payload, timeout=5)
+        resp.raise_for_status()
+    except Exception as e:
+        print("⚠️  create-patient unreachable:", e)
 
 @app.post("/users", status_code=201)
 def create_user(
@@ -130,7 +145,17 @@ def create_user(
             cedula=new_user.cedula,
             name=new_user.name
         ))
-        db.commit()  # <--- asegura que la FK quede guardada
+        db.commit()
         sync_doctor_data(str(new_user.id), new_user.cedula, new_user.name)
+
+    # 5) Si es patient, replica y notifica
+    if user.role.lower() == "patient":
+        db.add(UsersPatients(
+            user_id=new_user.id,
+            cedula=new_user.cedula,
+            name=new_user.name
+        ))
+        db.commit()
+        sync_patient_data(str(new_user.id), new_user.cedula, new_user.name)
 
     return {"message": "User created", "user_id": str(new_user.id)}

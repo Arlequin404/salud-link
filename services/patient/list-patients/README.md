@@ -1,4 +1,4 @@
-# get-patient
+# list-patients
 
 **Business Domain:** Patient Management  
 **Language:** Go (Golang)  
@@ -7,7 +7,7 @@
 
 ## Description
 
-Retrieves a patient's information by ID from the `patient_db`.
+Lists all patients registered in the database.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ Retrieves a patient's information by ID from the `patient_db`.
 
 ## Environment Variables
 
-Same as `create-patient`, but `PORT=8016`
+Same as `create-patient`, but `PORT=8015`
 
 ## Run Locally
 
@@ -28,12 +28,11 @@ go run main.go
 ## Run with Docker
 
 ```bash
-docker build -t get-patient .
-docker run --env-file .env -p 8016:8016 get-patient
+docker build -t list-patients .
+docker run --env-file .env -p 8015:8015 list-patients
 ```
 
 ## API
 
-- **GET /api/patient/:id**
-  - URL param: `id` (uuid)
-  - Returns: patient JSON object
+- **GET /api/patients**
+  - Returns: Array of patients

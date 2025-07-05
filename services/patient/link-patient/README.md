@@ -1,4 +1,4 @@
-# get-patient
+# link-patient
 
 **Business Domain:** Patient Management  
 **Language:** Go (Golang)  
@@ -7,7 +7,7 @@
 
 ## Description
 
-Retrieves a patient's information by ID from the `patient_db`.
+Links an existing patient to a new user by updating the `user_id`.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ Retrieves a patient's information by ID from the `patient_db`.
 
 ## Environment Variables
 
-Same as `create-patient`, but `PORT=8016`
+Same as `create-patient`, but `PORT=8019`
 
 ## Run Locally
 
@@ -28,12 +28,12 @@ go run main.go
 ## Run with Docker
 
 ```bash
-docker build -t get-patient .
-docker run --env-file .env -p 8016:8016 get-patient
+docker build -t link-patient .
+docker run --env-file .env -p 8019:8019 link-patient
 ```
 
 ## API
 
-- **GET /api/patient/:id**
-  - URL param: `id` (uuid)
-  - Returns: patient JSON object
+- **POST /api/patient/link**
+  - Body: `{ "patient_id": "...", "user_id": "..." }`
+  - Returns: success message
