@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "K2TuRFJkLvjh8OW0SsR1dylclGXkbpyUHM8Bp9dLpt4=",
+  "Source": "get-appointment",
+  "BasePath": "_content/get-appointment",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

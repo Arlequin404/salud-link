@@ -17,23 +17,8 @@ This microservice is part of the **User Domain** in the Salud-Link project. It i
   - `python-dotenv` for env management
   - `jose` for JWT encoding/decoding
 
-## 📁 Folder Structure
+```
 
-```
-app/
-├── auth/
-│   ├── controller.py
-│   ├── service.py
-│   └── schemas.py
-├── database/
-│   └── connection.py
-├── kafka/
-│   ├── producer.py
-│   └── consumer.py
-├── main.py
-├── Dockerfile
-├── requirements.txt
-```
 
 ## 🚀 How to Run
 
