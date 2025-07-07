@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>🏥 Salud-Link | Inicio</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script type="module" src="../js/main.js"></script>
+  <style>
+    .container {
+      padding: 20px;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      width: 280px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.03);
+    }
+    .card h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ---------- NAVBAR ----------- -->
+  <nav class="navbar">
+    <a href="home.html">🏠 Inicio</a>
+    <a href="user.html">Usuarios</a>
+    <a href="doctor.html">Doctores</a>
+    <a href="#" id="logoutBtn" style="margin-left:auto">Cerrar sesión</a>
+  </nav>
+
+  <main class="container">
+    <h1>Bienvenido al Panel Salud-Link</h1>
+
+    <div class="card-container">
+      <!-- Solo para ADMIN -->
+      <div class="card role-admin" onclick="location.href='user.html'">
+        <h2>👥 Gestión de Usuarios</h2>
+        <p>Crear, editar y eliminar usuarios</p>
+      </div>
+
+      <!-- ADMIN y DOCTOR -->
+      <div class="card role-admin role-doctor" onclick="location.href='doctor.html'">
+        <h2>👨‍⚕️ Panel de Doctores</h2>
+        <p>Registrar y gestionar doctores</p>
+      </div>
+
+      <!-- Futuro: PACIENTE -->
+      <!-- <div class="card role-admin role-doctor role-patient" onclick="location.href='patient.html'">
+        <h2>🧑‍🤝‍🧑 Pacientes</h2>
+        <p>Consultar y gestionar pacientes</p>
+      </div> -->
+    </div>
+  </main>
+</body>
+</html>

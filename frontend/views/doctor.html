@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>Doctores</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="home.html">🏠 Inicio</a>
+    <a href="user.html">Usuarios</a>
+    <a href="doctor.html" class="active">Doctores</a>
+    <a href="#" id="logoutBtn" style="margin-left:auto">Cerrar sesión</a>
+  </nav>
+
+  <div class="tabs">
+    <button id="tabRoleUsers">Usuarios Rol Doctor</button>
+    <button id="tabRegistered">Doctores Registrados</button>
+  </div>
+
+  <section id="usuariosDoctor" class="tabcontent">
+    <!-- ... tu sección de Usuarios Rol Doctor ... -->
+  </section>
+
+  <section id="doctoresRegistrados" class="tabcontent">
+    <h2>Doctores Registrados</h2>
+    <button id="refreshBtn" class="btn">Refrescar</button>
+    <input id="searchDoctor" placeholder="Buscar cédula"/>
+    <button id="searchBtn" class="btn">Buscar</button>
+
+    <table id="doctorTable">
+      <thead>
+        <tr>
+          <th>Cédula</th>
+          <th>Nombre</th>
+          <th>Especialidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <dialog id="dlgDoctor">
+      <form id="doctorForm" method="dialog">
+        <h3>Registrar / Editar Doctor</h3>
+        <input type="hidden" id="d-userId"/>
+
+        <label>Nombre
+          <input id="d-name" readonly>
+        </label>
+        <label>Cédula
+          <input id="d-cedula" readonly>
+        </label>
+        <label>Email
+          <input id="d-email" required>
+        </label>
+        <label>Especialidad
+          <input id="d-specialty" required>
+        </label>
+        <label>Teléfono móvil
+          <input id="d-phoneMobile">
+        </label>
+        <label>Teléfono oficina
+          <input id="d-phoneOff">
+        </label>
+        <label>Hospital
+          <input id="d-hospitalName">
+        </label>
+        <label>Dirección Hospital
+          <input id="d-hospitalAddress">
+        </label>
+        <label>Departamento
+          <input id="d-department">
+        </label>
+        <label>Turno
+          <input id="d-shiftType">
+        </label>
+        <label>Años de experiencia
+          <input id="d-yearsExperience" type="number">
+        </label>
+        <label>No. de licencia
+          <input id="d-licenseNumber">
+        </label>
+
+        <hr>
+        <h4>Turnos</h4>
+        <button type="button" id="addScheduleBtn" class="btn">Agregar Turno</button>
+        <table id="scheduleTable">
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <button id="saveDoc" type="submit" class="btn">Guardar</button>
+        <button type="button" onclick="document.getElementById('dlgDoctor').close()" class="btn">Cancelar</button>
+      </form>
+    </dialog>
+
+    <!-- Diálogo para crear/editar un turno -->
+    <dialog id="dlgSchedule">
+      <form id="scheduleForm" method="dialog">
+        <h3>Registrar / Editar Turno</h3>
+        <input type="hidden" id="s-id">
+        <label>Día de la semana
+          <select id="s-dayOfWeek" required>
+            <option value="1">Lunes</option>
+            <option value="2">Martes</option>
+            <option value="3">Miércoles</option>
+            <option value="4">Jueves</option>
+            <option value="5">Viernes</option>
+            <option value="6">Sábado</option>
+            <option value="7">Domingo</option>
+          </select>
+        </label>
+        <label>Hora inicio
+          <input type="time" id="s-startTime" required>
+        </label>
+        <label>Hora fin
+          <input type="time" id="s-endTime" required>
+        </label>
+        <button type="submit" class="btn">Guardar Turno</button>
+        <button type="button" onclick="document.getElementById('dlgSchedule').close()" class="btn">Cancelar</button>
+      </form>
+    </dialog>
+  </section>
+
+  <script src="../js/doctor/index.js" type="module"></script>
+</body>
+</html>

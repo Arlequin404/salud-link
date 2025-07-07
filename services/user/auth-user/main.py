@@ -40,7 +40,7 @@ class User(Base):
 # Inicialización de FastAPI
 app = FastAPI()
 
-# Activar CORS para frontend (http://localhost:3000)
+# Activar CORS para frontend 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

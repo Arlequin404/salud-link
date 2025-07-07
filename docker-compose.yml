@@ -1,47 +1,352 @@
-version: '3.8'
+
 
 services:
+  # ─────────────── POSTGRES FOR USER ───────────────
+  postgres-user:
+    image: postgres:15
+    container_name: postgres-user
+    restart: always
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d user_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - user_pg_data:/var/lib/postgresql/data
+    networks: [salud-link]
 
+  # ─────────────── POSTGRES FOR DOCTOR ───────────────
+  postgres-doctor:
+    image: postgres:15
+    container_name: postgres-doctor
+    restart: always
+    environment:
+      POSTGRES_DB: doctor_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d doctor_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5433:5432"
+    volumes:
+      - doctor_pg_data:/var/lib/postgresql/data
+    networks: [salud-link]
+
+  # ─────────────── POSTGRES FOR PATIENT ───────────────
+  postgres-patient:
+    image: postgres:15
+    container_name: postgres-patient
+    restart: always
+    environment:
+      POSTGRES_DB: patient_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d patient_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5434:5432"
+    volumes:
+      - patient_pg_data:/var/lib/postgresql/data
+    networks: [salud-link]
+
+    # ─────────────── APPOINTMENT DB ───────────────
+  postgres-appointment:
+    image: postgres:15
+    container_name: postgres-appointment
+    restart: always
+    environment:
+      POSTGRES_DB: appointment_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d appointment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5435:5432"
+    volumes:
+      - appointment_pg_data:/var/lib/postgresql/data
+    networks: [salud-link]
+
+
+  # ─────────────── USER MS ───────────────
   create-user:
     build: ./services/user/create-user
+    env_file: ./services/user/create-user/.env
     container_name: create-user
     ports:
       - "8001:8000"
-    env_file:
-      - ./services/user/create-user/.env
-
-  update-user:
-    build: ./services/user/update-user
-    container_name: update-user
-    ports:
-      - "8002:8000"
-    env_file:
-      - ./services/user/update-user/.env
-
-  delete-user:
-    build: ./services/user/delete-user
-    container_name: delete-user
-    ports:
-      - "8003:8000"
-    env_file:
-      - ./services/user/delete-user/.env
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
 
   get-user:
     build: ./services/user/get-user
+    env_file: ./services/user/get-user/.env
     container_name: get-user
     ports:
       - "8004:8000"
-    env_file:
-      - ./services/user/get-user/.env
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
+
+  update-user:
+    build: ./services/user/update-user
+    env_file: ./services/user/update-user/.env
+    container_name: update-user
+    ports:
+      - "8002:8000"
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
+
+  delete-user:
+    build: ./services/user/delete-user
+    env_file: ./services/user/delete-user/.env
+    container_name: delete-user
+    ports:
+      - "8003:8000"
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
 
   auth-user:
     build: ./services/user/auth-user
+    env_file: ./services/user/auth-user/.env
     container_name: auth-user
     ports:
       - "8005:8000"
-    env_file:
-      - ./services/user/auth-user/.env
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks: [salud-link]
 
+  # ─────────────── DOCTOR MS ───────────────
+  create-doctor:
+    build: ./services/doctor/create-doctor
+    env_file: ./services/doctor/create-doctor/.env
+    container_name: create-doctor
+    environment:
+      POSTGRES_HOST: postgres-doctor
+    ports:
+      - "8006:8006"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  list-doctors:
+    build: ./services/doctor/list-doctors
+    env_file: ./services/doctor/list-doctors/.env
+    container_name: list-doctors
+    environment:
+      POSTGRES_HOST: postgres-doctor
+    ports:
+      - "8007:8007"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  get-doctor:
+    build: ./services/doctor/get-doctor
+    env_file: ./services/doctor/get-doctor/.env
+    container_name: get-doctor
+    environment:
+      POSTGRES_HOST: postgres-doctor
+    ports:
+      - "8008:8008"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  update-doctor:
+    build: ./services/doctor/update-doctor
+    env_file: ./services/doctor/update-doctor/.env
+    container_name: update-doctor
+    environment:
+      POSTGRES_HOST: postgres-doctor
+    ports:
+      - "8009:8009"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  delete-doctor:
+    build: ./services/doctor/delete-doctor
+    env_file: ./services/doctor/delete-doctor/.env
+    container_name: delete-doctor
+    environment:
+      POSTGRES_HOST: postgres-doctor
+    ports:
+      - "8010:8010"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  schedule-service:
+    build: ./services/doctor/schedule-service
+    env_file: ./services/doctor/schedule-service/.env
+    container_name: schedule-service
+    environment:
+      POSTGRES_HOST: postgres-doctor
+    ports:
+      - "8012:8012"
+    depends_on:
+      - postgres-doctor
+      - get-doctor
+    networks: [salud-link]
+
+  get-available-slots:
+    build: ./services/doctor/get-available-slots
+    env_file: ./services/doctor/get-available-slots/.env
+    container_name: get-available-slots
+    environment:
+      POSTGRES_HOST: postgres-doctor
+    ports:
+      - "8013:8013"
+    depends_on:
+      postgres-doctor:
+        condition: service_healthy
+    networks: [salud-link]
+
+  # ─────────────── PATIENT MS ───────────────ervices:
+  create-patient:
+    build:
+      context: ./services/patient/create-patient
+    env_file:
+      - ./services/patient/create-patient/.env   # opcional: si ya tienes DB_* en .env
+    container_name: create-patient
+    environment:
+      POSTGRES_HOST: postgres-patient
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: patient_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      PORT: "8014"
+    ports:
+      - "8014:8014"
+    depends_on:
+      postgres-patient:
+        condition: service_healthy
+    networks:
+      - salud-link
+      
+  list-patients:
+    build: ./services/patient/list-patients
+    env_file: ./services/patient/list-patients/.env
+    container_name: list-patients
+    environment:
+      POSTGRES_HOST: postgres-patient
+    ports:
+      - "8015:8015"
+    depends_on:
+      postgres-patient:
+        condition: service_healthy
+    networks: [salud-link]
+
+  get-patient:
+    build: ./services/patient/get-patient
+    env_file: ./services/patient/get-patient/.env
+    container_name: get-patient
+    environment:
+      POSTGRES_HOST: postgres-patient
+    ports:
+      - "8016:8016"
+    depends_on:
+      postgres-patient:
+        condition: service_healthy
+    networks: [salud-link]
+
+  update-patient:
+    build: ./services/patient/update-patient
+    env_file: ./services/patient/update-patient/.env
+    container_name: update-patient
+    environment:
+      POSTGRES_HOST: postgres-patient
+    ports:
+      - "8017:8017"
+    depends_on:
+      postgres-patient:
+        condition: service_healthy
+    networks: [salud-link]
+
+  delete-patient:
+    build: ./services/patient/delete-patient
+    env_file: ./services/patient/delete-patient/.env
+    container_name: delete-patient
+    environment:
+      POSTGRES_HOST: postgres-patient
+    ports:
+      - "8018:8018"
+    depends_on:
+      postgres-patient:
+        condition: service_healthy
+    networks: [salud-link]
+
+  link-patient:
+    build: ./services/patient/link-patient
+    env_file: ./services/patient/link-patient/.env
+    container_name: link-patient
+    environment:
+      POSTGRES_HOST: postgres-patient
+    ports:
+      - "8019:8019"
+    depends_on:
+      postgres-patient:
+        condition: service_healthy
+    networks: [salud-link]
+
+
+  # ─────────────── APPOINTMENT MS (C#) ───────────────
+  create-appointment:
+    build: ./services/appointment/create-appointment
+    environment:
+      POSTGRES_CONNECTION: "Host=postgres-appointment;Port=5432;Database=appointment_db;Username=admin;Password=admin123"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      PORT: "8020"
+    ports:
+      - "8020:8020"
+    depends_on:
+      postgres-appointment:
+        condition: service_healthy
+    networks: [salud-link]
+
+  get-appointment:
+    build: ./services/appointment/get-appointment
+    container_name: get-appointment
+    environment:
+      POSTGRES_CONNECTION: "Host=postgres-appointment;Port=5432;Database=appointment_db;Username=admin;Password=admin123"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "8021:8021"
+    depends_on:
+      postgres-appointment:
+        condition: service_healthy
+    networks: [salud-link]
+
+
+  # ─────────────── FRONTEND ───────────────
   frontend:
     image: nginx:alpine
     container_name: frontend
@@ -49,3 +354,14 @@ services:
       - "3000:80"
     volumes:
       - ./frontend:/usr/share/nginx/html:ro
+    networks: [salud-link]
+
+volumes:
+  user_pg_data:
+  doctor_pg_data:
+  patient_pg_data:
+  appointment_pg_data:
+
+networks:
+  salud-link:
+    driver: bridge
